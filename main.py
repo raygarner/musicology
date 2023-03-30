@@ -1,3 +1,6 @@
+# we use bach for frequency of chords and chord transitions
+# we use folk for frequency of melody notes and melody note transitions
+
 from music21 import *
 import numpy as np
 import matplotlib.pyplot as plt
