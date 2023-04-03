@@ -4,14 +4,29 @@ import matplotlib.pyplot as plt
 import os
 
 
-def plot_degree_freq(data):
+def plot_degree_freq(data, name):
 	plt.plot(data)
-	plt.show()
+	plt.savefig(name + '.png')
+	plt.close()
 
 
-def plot_degree_matrix(data):
+def plot_degree_matrix(data, name):
 	plt.matshow(data)
-	plt.show()
+	plt.savefig(name + '.png')
+	plt.close()
+
+
+def normalise_list(xs):
+	sum = 0
+	for m in range(0, len(xs)-1):
+		sum += xs[m]
+	for m in range(0, len(xs)-1):
+		xs[m] = (xs[m] / sum) * 100
+	return xs
+
+
+def normalise_matrix(xss):
+	pass
 
 
 def add_lists(xs, ys):
@@ -19,10 +34,10 @@ def add_lists(xs, ys):
 		xs[i] += ys[i]
 
 
-def add_matrices(xs, ys):
-	for m in range(0, len(xs)-1):
-		for n in range(0, len(xs[0])-1):
-			xs[m][n] += ys[m][n]
+def add_matrices(xss, yss):
+	for m in range(0, len(xss)-1):
+		for n in range(0, len(xss[0])-1):
+			xss[m][n] += yss[m][n]
 			
 
 def get_chord_freq(score, key):
@@ -36,7 +51,7 @@ def get_chord_freq(score, key):
 		
 
 def get_note_freq(score, key):
-	chord_freq = [0, 0, 0, 0, 0, 0, 0, 0]
+	note_freq = [0, 0, 0, 0, 0, 0, 0, 0]
 	melody = score.getElementsByClass('Part')[0].measure(1).getElementsByClass('Note')
 	for n in melody:
 		d = roman.romanNumeralFromChord(chord.Chord([n]), key).scaleDegree
@@ -82,8 +97,7 @@ for file in os.listdir(dir):
 		add_lists(note_freq, get_note_freq(score, key))
 		add_matrices(chord_trans_freq, get_chord_trans_freq(score, key))
 		add_matrices(note_trans_freq, get_note_trans_freq(score, key))
-plot_degree_freq(chord_freq)
-plot_degree_freq(note_freq)
-plot_degree_matrix(chord_trans_freq)
-plot_degree_matrix(note_trans_freq)
-
+plot_degree_freq(normalise_list(chord_freq), "chord_freq")
+plot_degree_freq(normalise_list(note_freq), "note_freq")
+plot_degree_matrix(chord_trans_freq, "chord_trans_freq")
+plot_degree_matrix(note_trans_freq, "note_trans_freq")
